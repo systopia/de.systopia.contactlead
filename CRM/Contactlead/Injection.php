@@ -23,6 +23,21 @@ use CRM_Contactlead_ExtensionUtil as E;
 class CRM_Contactlead_Injection {
 
   /**
+   * Test if the contact lead fields should be injected
+   * @return bool should it be injected
+   */
+  public static function shouldInject() {
+    // if there is a CID, this is an edit!
+    $cid = CRM_Utils_Request::retrieve('cid', 'Integer');
+    if ($cid) {
+      return false;
+    }
+
+    // check if the injection is turned on
+    return (bool) CRM_Contactlead_Config::getSetting('contact_form_inject');
+  }
+
+  /**
    * Perform actions on hook_civicrm_buildForm().
    *
    * @param string $formName
@@ -41,12 +56,15 @@ class CRM_Contactlead_Injection {
       $categories,
       $required
     );
-    $form->add(
-        'text',
+    $form->addEntityRef(
         'contactlead_contact',
         E::ts('Lead Contact'),
-        $required
+        [
+            'contact_type'      => 'Individual',
+            'check_permissions' => 0,
+        ]
     );
+
     $form->add(
         'checkbox',
         'contactlead_important',
@@ -61,7 +79,6 @@ class CRM_Contactlead_Injection {
     // inject template and script
     CRM_Core_Region::instance('page-body')->add(['template' => E::path("templates/CRM/Contactlead/Form/LeadSnippet.tpl")]);
     Civi::resources()->addScriptFile('de.systopia.contactlead', "js/LeadInjection.js");
-    //Civi::resources()->addVars('contactlead', ['campaigns' => $campaigns]);
   }
 
   /**
@@ -71,8 +88,25 @@ class CRM_Contactlead_Injection {
    * @param CRM_Contact_Form_Contact $form
    */
   public static function postProcess($formName, &$form) {
-    // TODO: process
     $values = $form->exportValues();
+
+    if (!empty($values['contactlead_contact'])) {
+      $new_lead_data = [
+          'contact_leads.contact_lead_category'  => $values['contactlead_category'],
+          'contact_leads.contact_lead_id'        => $values['contactlead_contact'],
+          'contact_leads.contact_lead_from'      => date('YmdHis'),
+          'contact_leads.contact_lead_enabled'   => 1,
+          'contact_leads.contact_lead_important' => CRM_Utils_Array::value('contactlead_important', $values, 0),
+      ];
+      CRM_Contactlead_CustomData::resolveCustomFields($new_lead_data);
+
+      // build record and append ':-1' to all keys to indicate new record
+      $new_lead_record = ['entity_id' => $form->_contactId];
+      foreach ($new_lead_data as $key => $value) {
+        $new_lead_record["{$key}:-1"] = $value;
+      }
+      civicrm_api3('CustomValue', 'create', $new_lead_record);
+    }
   }
 
   /**
