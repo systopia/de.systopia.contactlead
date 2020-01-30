@@ -3,9 +3,9 @@
   <item>
     <path>civicrm/admin/settings/contactlead</path>
     <page_callback>CRM_Contactlead_Form_Settings</page_callback>
-    <title>ContactLead Settings</title>
+    <title>Contact Lead Settings</title>
     <access_arguments>administer CiviCRM</access_arguments>
-    <adminGroup>Settings</adminGroup>
+    <adminGroup>Communications</adminGroup>
     <icon>admin/import_export_map.png</icon>
   </item>
 </menu>
