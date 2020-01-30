@@ -19,6 +19,32 @@ require_once 'contactlead.civix.php';
 use CRM_Contactlead_ExtensionUtil as E;
 
 /**
+ * Implements hook_civicrm_buildForm().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_buildForm
+ */
+function contactlead_civicrm_buildForm($formName, &$form) {
+  if ($formName == 'CRM_Contact_Form_Contact') {
+    if (CRM_Contactlead_Config::getSetting('contact_form_inject')) {
+      CRM_Contactlead_Injection::addFormElements($formName, $form);
+    }
+  }
+}
+
+/**
+ * Implements hook_civicrm_postProcess().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_postProcess
+ */
+function contactlead_civicrm_postProcess($formName, &$form) {
+  if ($formName == 'CRM_Contact_Form_Contact') {
+    if (CRM_Contactlead_Config::getSetting('contact_form_inject')) {
+      CRM_Contactlead_Injection::postProcess($formName, $form);
+    }
+  }
+}
+
+/**
  * Implements hook_civicrm_config().
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_config

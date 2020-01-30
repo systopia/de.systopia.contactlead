@@ -9,7 +9,6 @@
       "_lookup": ["name"],
       "_translate": ["label"],
       "name": "default",
-      "value": "1",
       "label": "Default",
       "filter": "0",
       "is_reserved": "0",
