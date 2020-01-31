@@ -56,6 +56,8 @@ class CRM_Contactlead_Injection {
       $categories,
       $required
     );
+    $form->setDefaults(['contactlead_category' => CRM_Contactlead_Config::getDefaultCategory()]);
+
     $form->addEntityRef(
         'contactlead_contact',
         E::ts('Lead Contact'),

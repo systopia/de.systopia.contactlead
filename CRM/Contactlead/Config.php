@@ -48,7 +48,7 @@ class CRM_Contactlead_Config {
     static $categories = null;
     if ($categories === null) {
       $categories = [];
-      $query      = civicrm_api3('OptionValue', 'get', [
+      $query = civicrm_api3('OptionValue', 'get', [
           'option.limit'    => 0,
           'option_group_id' => 'contact_lead_category',
           'is_active'       => 1,
@@ -59,5 +59,29 @@ class CRM_Contactlead_Config {
       }
     }
     return $categories;
+  }
+
+  /**
+   * Get the default category ID
+   *
+   * @return string category ID
+   */
+  public static function getDefaultCategory() {
+    static $default_category_id = null;
+    if ($default_category_id === null) {
+      $default_category_id = '';
+      $query = civicrm_api3('OptionValue', 'get', [
+          'option.limit'    => 1,
+          'option_group_id' => 'contact_lead_category',
+          'is_active'       => 1,
+          'return'          => 'value,label',
+          'option.sort'     => 'is_default desc, weight asc'
+      ]);
+      if ($query['count']) {
+        $value = reset($query['values']);
+        $default_category_id = $value['value'];
+      }
+    }
+    return $default_category_id;
   }
 }
