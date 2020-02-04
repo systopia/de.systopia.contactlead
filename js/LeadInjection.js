@@ -15,7 +15,8 @@
 
 (function ($) {
     let contactLeadWrapper = $('#contactLeadWrapper');
-    let accordionWrappers = $('.crm-accordion-wrapper').not(contactLeadWrapper);
+    let contactOriginWrapper = $('#contactOriginWrapper');
+    let accordionWrappers = $('.crm-accordion-wrapper').not(contactLeadWrapper).not(contactOriginWrapper);
 
     // make sure there's something there...
     let firstAccordion = accordionWrappers[0];
@@ -39,6 +40,7 @@
         if (cj("#contactlead_contact").val()) {
             cj('.crm-accordion-wrapper')
                 .not(contactLeadWrapper)
+                .not(contactOriginWrapper)
                 .first()
                 .removeClass('collapsed');
         }
