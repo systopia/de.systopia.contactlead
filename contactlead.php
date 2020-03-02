@@ -25,7 +25,7 @@ use CRM_Contactlead_ExtensionUtil as E;
  */
 function contactlead_civicrm_buildForm($formName, &$form) {
   if ($formName == 'CRM_Contact_Form_Contact') {
-    if (CRM_Contactlead_Injection::shouldInject()) {
+    if (CRM_Contactlead_Injection::shouldInject($form)) {
       CRM_Contactlead_Injection::addFormElements($formName, $form);
     }
   }
@@ -38,7 +38,7 @@ function contactlead_civicrm_buildForm($formName, &$form) {
  */
 function contactlead_civicrm_postProcess($formName, &$form) {
   if ($formName == 'CRM_Contact_Form_Contact') {
-    if (CRM_Contactlead_Injection::shouldInject()) {
+    if (CRM_Contactlead_Injection::shouldInject($form)) {
       CRM_Contactlead_Injection::postProcess($formName, $form);
     }
   }
