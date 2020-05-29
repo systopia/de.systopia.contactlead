@@ -79,11 +79,11 @@ class CRM_Xportx_Module_ContactLeads extends CRM_Xportx_Module
             $field_name = $field_spec['key'];
             if (in_array($field_name, ['from', 'to', 'is_enabled', 'is_important'])) {
                 // this is a lead metadata field
-                $selects[] = "GROUP_CONCAT({$lead_alias}.{$field_name}) AS {$value_prefix}{$field_name}";
+                $selects[] = "GROUP_CONCAT(DISTINCT({$lead_alias}.{$field_name})) AS {$value_prefix}{$field_name}";
             } else {
                 // this is a lead contact field
                 // TODO: process exceptions (like individual_prefix, etc.)
-                $selects[] = "GROUP_CONCAT({$lead_contact_alias}.{$field_name}) AS {$value_prefix}{$field_name}";
+                $selects[] = "GROUP_CONCAT(DISTINCT({$lead_contact_alias}.{$field_name})) AS {$value_prefix}{$field_name}";
             }
         }
     }
