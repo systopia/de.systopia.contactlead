@@ -20,7 +20,7 @@ use CRM_Contactlead_ExtensionUtil as E;
 /**
  * Collection of upgrade steps.
  */
-class CRM_Contactlead_Upgrader extends CRM_Contactlead_Upgrader_Base {
+class CRM_Contactlead_Upgrader extends CRM_Extension_Upgrader_Base {
 
   /**
    * Installer
